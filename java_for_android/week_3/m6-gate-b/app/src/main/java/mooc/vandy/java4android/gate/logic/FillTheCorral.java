@@ -13,7 +13,7 @@ public class FillTheCorral {
     /**
      * Reference to the OutputInterface.
      */
-    private OutputInterface mOut;
+    private final OutputInterface mOut;
 
     /**
      * Constructor initializes the field.
@@ -22,6 +22,37 @@ public class FillTheCorral {
         mOut = out;
     }
 
-    // TODO -- Fill your code in here
-    
+    public void setCorralGates(Gate[] gate, Random selectDirection) {
+        mOut.println("Initial gate setup:");
+
+        for (int i = 0; i < gate.length; i++) {
+            gate[i].setSwing(selectDirection.nextInt(3) - 1);
+            mOut.println("Gate " + i + ": " + gate[i].toString());
+        }
+    }
+
+    public boolean anyCorralAvailable(Gate[] corral) {
+        for (Gate gate : corral) {
+            if (gate.getSwingDirection() == Gate.IN)
+                return true;
+        }
+        return false;
+    }
+
+    public int corralSnails(Gate[] corral, Random rand) {
+        int pasture = 5, attemptCount = 0;
+        int randomNumber, randomGate;
+
+        do {
+            randomGate = rand.nextInt(corral.length);
+            randomNumber = rand.nextInt(pasture) + 1;
+            mOut.println(randomNumber + " are trying to move through corral " + randomGate);
+            pasture -= corral[randomGate].thru(randomNumber);
+            attemptCount++;
+        } while (pasture > 0);
+
+        mOut.println("It took " + attemptCount + " attempts to corral all of the snails.");
+
+        return attemptCount;
+    }
 }
